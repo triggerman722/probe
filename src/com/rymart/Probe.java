@@ -9,12 +9,12 @@ public class Probe {
         double[][] rainfallInput = getRainfallInput(planets);
         printTable(rainfallInput);
         printRange(rainfallInput);
-        printAverages(rainfallInput);
-        printTotals(rainfallInput);
-        printMaximum(rainfallInput);
-        printMinimum(rainfallInput);
-        double[][] flippedRainInput = flipInput(rainfallInput);
-        printRecordingCycles(flippedRainInput);
+        double[][] flippedrainfallInput = flipInput(rainfallInput);
+        printAverages(flippedrainfallInput);
+        printTotals(flippedrainfallInput);
+        printMaximum(flippedrainfallInput);
+        printMinimum(flippedrainfallInput);
+        printRecordingCycles(rainfallInput);
     }
 
     private static double[][] getPlanetInput() {
