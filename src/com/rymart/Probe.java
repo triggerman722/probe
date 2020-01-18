@@ -5,6 +5,19 @@ import java.util.Scanner;
 public class Probe {
 
     public static void main(String[] args) {
+        double[][] planets = getPlanetInput();
+        double[][] rainfallInput = getRainfallInput(planets);
+        printTable(rainfallInput);
+        printRange(rainfallInput);
+        printAverages(rainfallInput);
+        printTotals(rainfallInput);
+        printMaximum(rainfallInput);
+        printMinimum(rainfallInput);
+        double[][] flippedRainInput = flipInput(rainfallInput);
+        printRecordingCycles(flippedRainInput);
+    }
+
+    private static double[][] getPlanetInput() {
         Scanner Beep = new Scanner(System.in);
         int rows = 1;
         int cols = 1;
@@ -12,128 +25,120 @@ public class Probe {
             if (rows < 1 || cols < 1) {
                 System.out.println("These are faulty values. Enter some new values.");
             }
-
-            System.out.print("Enter a number for the amount of rainfall"+ " readings for each planet: ");
+            System.out.print("Enter a number for the amount of rainfall" + " readings for each planet: ");
             rows = Beep.nextInt();
-            System.out.print("Enter the number of planets that are "+ "being monitered: ");
+            System.out.print("Enter the number of planets that are " + "being monitered: ");
             cols = Beep.nextInt();
             System.out.println();
-        }while (rows <= 0 || cols <= 0);
-
-        double[][] array = new double[rows][cols];
-        int count = 0;
-        int gho = 0;
-        for (int x = 0; x < array.length; x++) {
-            count++;
-            for (int y = 0; y < array[x].length; y++) {
-                gho++;
-                System.out.print("Enter a value for " + count + ", " + gho + ": ");
-                array[x][y] = Beep.nextDouble();
-            }
-            gho = 0;
-            System.out.println();
-        }
-
-        for (int i = 0; i<array.length; i++) {
-            //for each row
-            double rowTotal = 0.0;
-            double min =99999999, max = 0.0;
-            for(int j = 0; j<array[i].length; j++) {
-                //for each col
-                double rainAmount = array[i][j];
-                System.out.print(rainAmount + " ");
-                rowTotal += rainAmount;
-                min = Math.min(min, rainAmount);
-                max = Math.max(max, rainAmount);
-            }
-            System.out.print(" Total: " + rowTotal + "; Average: " + rowTotal/rows + "; Min: " + min + "; Max: " + max);
-            System.out.println();
-        }
-        for (int i = 0; i<cols; i++) {
-            double colTotal = 0.0;
-            double colmin=99999999, colmax=0.0;
-            for (int y=0;y<rows;y++) {
-                double colrainAmount = array[y][i];
-                colTotal += colrainAmount;
-                colmin = Math.min(colmin, colrainAmount);
-                colmax = Math.max(colmax, colrainAmount);
-            }
-            System.out.print(" Total: " + colTotal + "; Average: " + colTotal/cols + "; Min: " + colmin + "; Max: " + colmax);
-        }
-//int r = rows;
-        //int c = cols;
-        //double x = Range(array);
-        //System.out.println("The range is: " + x);
-        //AvgRain(array, c);
-        //System.out.println("The average rainfall amount is : " + y);
-        //TotRain(array, r);
-        //double z = MaxRain(array);
-        //System.out.println("The highest amount of rainfall: " + z);
-
+        } while (rows <= 0 || cols <= 0);
+        return new double[rows][cols];
     }
-
-    public static double Range (double[][] array) {
+    private static double[][] getRainfallInput(double[][] planets) {
+        Scanner Beep = new Scanner(System.in);
+        for (int x = 0; x < planets.length; x++) {
+            for (int y = 0; y < planets[x].length; y++) {
+                System.out.print("Enter a the rainfall reading " + x + " for planet " + y + ": ");
+                planets[x][y] = Beep.nextDouble();
+            }
+            System.out.println();
+        }
+        return planets;
+    }
+    private static void printTable(double[][] rainfallInput) {
+        for (int i = 0; i < rainfallInput.length; i++) {
+            for (int j = 0; j < rainfallInput[i].length; j++) {
+                double rainAmount = rainfallInput[i][j];
+                System.out.print(rainAmount + " ");
+            }
+            System.out.println();
+        }
+    }
+    private static void printRange(double[][] rainfallInput) {
         double max = 0;
         double min = 10000000;
-        for (int i = 0; i<array.length; i++) {
-            for(int j = 0; j<array[i].length; j++) {
-                if(array[i][j] > max)
-                    max = array[i][j];
-                if(array[i][j] < min)
-                    min = array[i][j];
+        for (int i = 0; i < rainfallInput.length; i++) {
+            for (int j = 0; j < rainfallInput[i].length; j++) {
+                max = Math.max(max, rainfallInput[i][j]);
+                min = Math.min(min, rainfallInput[i][j]);
             }
         }
         double ran = (max - min);
-        return ran;
+        System.out.println("The range is: " + ran);
     }
-    public static void AvgRain (double[][] array, int x) {
-        double sum = 0;
-        for (int z = 0; z < array[x].length; z++) {
-            for(int j = 0; j < array.length; j++) {
-                sum = sum + array[j][x];
+    private static void printAverages(double[][] rainfallInput) {
+        for (int i = 0; i < rainfallInput.length; i++) {
+            double rowTotal = 0.0;
+            for (int j = 0; j < rainfallInput[i].length; j++) {
+                double rainAmount = rainfallInput[i][j];
+                rowTotal += rainAmount;
             }
-            double avg = sum/x;
-            System.out.println("The average of planet " + z + " = " + avg);
-            sum = 0;
-            avg = 0;
+            System.out.println("The average for planet " + i + " is " + rowTotal / rainfallInput[i].length);
+        }
+    }
+    private static void printTotals(double[][] rainfallInput) {
+        for (int i = 0; i < rainfallInput.length; i++) {
+            double rowTotal = 0.0;
+            for (int j = 0; j < rainfallInput[i].length; j++) {
+                double rainAmount = rainfallInput[i][j];
+                rowTotal += rainAmount;
+            }
+            System.out.println("The total for planet " + i + " is " + rowTotal);
+        }
+    }
+    private static void printMaximum(double[][] rainfallInput) {
+        for (int i = 0; i < rainfallInput.length; i++) {
+            double max = 0;
+            for (int j = 0; j < rainfallInput[i].length; j++) {
+                double rainAmount = rainfallInput[i][j];
+                max = Math.max(max, rainAmount);
+            }
+            System.out.println("The maximum rain for planet " + i + " is: " + max);
+        }
+    }
+        private static void printMinimum(double[][] rainfallInput) {
+        for (int i = 0; i < rainfallInput.length; i++) {
+            double min = 99999999;
+            for (int j = 0; j < rainfallInput[i].length; j++) {
+                double rainAmount = rainfallInput[i][j];
+                min = Math.min(min, rainAmount);
+            }
+            System.out.println("The minimum rain for planet " + i + " is: " + min);
+        }
+    }
+    private static double[][] flipInput(double[][] rainfallInput) {
+        int originalrows = rainfallInput.length;
+        int originalcols = rainfallInput[0].length; //null pointer risk here
+        double [][] flipped = new double[originalcols][originalrows];
+
+        for (int i = 0; i < flipped.length; i++) {
+            for (int j = 0; j < flipped[i].length; j++) {
+                flipped[i][j] = rainfallInput[j][i];
+
+            }
+        }
+        return flipped;
+    }
+    private static void printRecordingCycles(double[][] flippedRainInput) {
+        for (int i = 0; i < flippedRainInput.length; i++) {
+            double rowTotal = 0.0;
+            for (int j = 0; j < flippedRainInput[i].length; j++) {
+                double rainAmount = flippedRainInput[i][j];
+                rowTotal += rainAmount;
+            }
+            System.out.println("The average rainfall per recording cycle " + i + " = " + rowTotal / flippedRainInput[i].length);
         }
     }
 
-    public static void TotRain (double[][] array, int x) {
-        double sum = 0;
-        for (int z = 0; z < array.length; z++) {
-            for(int j = 0; j < array[x].length; j++) {
-                sum = sum + array[x][j];
-            }
-            double avg = sum/x;
-            System.out.println("The average rainfall per recording cycle " + z + " = " + avg);
-            sum = 0;
-            avg = 0;
-        }
-    }
-/*
-public static double AvgRain (double[][] array, int x) {
-   double sum = 0;
-   for(int j = 0; j<=array.length; j++) {
-       sum = sum + array[j][x];
-   }
-   double avg = sum/x;
-   System.out.println("The average of planet " + x + " = " + avg);
-   sum = 0;
- return sum;
-}
 
 
-public static double TotRain (double[][] array, int x) {
-   double sum = 0;
 
-   for(int j = 0; j>array[x].length; j++) {
-       if (x <= array.length -1 || x <= 0 ) {
-           return sum;
-       }
-       else
-           sum = sum + array[x][j];
-   }
-}
-*/
+
+
+
+
+
+
+
+
+
 }
